@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const SmurfContainer = styled.div`
   display: flex;
@@ -20,7 +21,9 @@ const Smurf = props => {
       <strong>{props.height} tall</strong>
       <p>{props.age} smurf years old</p>
       <div>
-        <button onClick={props.edit}>Edit</button>
+        <Link to="/smurf-form">
+          <button onClick={(e) => props.edit(e, props.id)}>Edit</button>
+        </Link>
         <button onClick={(e) => props.delete(e, props.id)}>Delete</button>
       </div>
     </SmurfContainer>

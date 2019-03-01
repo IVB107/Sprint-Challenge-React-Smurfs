@@ -20,7 +20,7 @@ const NavBar = props => {
     return (
         <NavContainer>
             <NavLink to="/" style={Link} >Smurfs</NavLink>
-            <NavLink to="/smurf-form" style={Link} >Add Smurf</NavLink>
+            <NavLink to="/smurf-form" style={Link} >Smurf Form</NavLink>
         </NavContainer>
     )
 }

@@ -11,6 +11,9 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isEditing: false,
+      editSmurf: {},
+      editId: '',
       smurfs: [],
     };
   }
@@ -27,9 +30,7 @@ class App extends Component {
           smurfs: res.data
         })
       })
-      .catch(err => {
-        console.log(err);
-      })
+      .catch(err => console.log(err))
   }
 
   handleAddSmurf = (e, smurf) => {
@@ -39,13 +40,32 @@ class App extends Component {
         this.setState({ smurfs: res.data });
         // this.props.history.push('/');
       })
-      .catch(err => {
-        console.log(err);
-      })
+      .catch(err => console.log(err))
   }
 
-  handleEditSmurf = () => {
+  handleEditSmurf = (e, id) => {
+    e.preventDefault();
+    const smurf = this.state.smurfs.find(smurf => smurf.id === id);
+    this.setState({
+      isEditing: true,
+      editSmurf: smurf,
+      editId: id,
+    })
+  }
 
+  handleSubmitEdit = (e, id, newSmurf) => {
+    e.preventDefault();
+    axios.put(`http://localhost:3333/smurfs/${id}`, newSmurf)
+      .then(res => {
+        console.log(res);
+        this.setState({
+          isEditing: false,
+          editSmurf: {},
+          editId: '',
+          smurfs: res.data
+        })
+      })
+      .catch(err => console.log(err))
   }
 
   handleDeleteSmurf = (e, id) => {
@@ -54,9 +74,7 @@ class App extends Component {
         console.log(res);
         this.setState({ smurfs: res.data });
       })
-      .catch(err => {
-        console.log(err);
-      })
+      .catch(err => console.log(err))
   }
 
   render() {
@@ -66,7 +84,11 @@ class App extends Component {
         <Route path="/smurf-form" render={props => 
           <SmurfForm 
             {...props}
-            addSmurf={this.handleAddSmurf} 
+            addSmurf={this.handleAddSmurf}
+            submitEdit={this.handleSubmitEdit}
+            isEditing={this.state.isEditing}
+            editSmurf={this.state.editSmurf}
+            editId={this.state.editId}
           />
         }/>
         <Route exact path="/" render={props => 
