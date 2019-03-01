@@ -19,6 +19,7 @@ class App extends Component {
   // You'll need to make sure you have the right properties on state and pass them down to props.
 
   componentDidMount = () => {
+    console.log(this.props);
     axios.get('http://localhost:3333/smurfs')
       .then(res => {
         console.log(res);
@@ -33,6 +34,22 @@ class App extends Component {
 
   handleAddSmurf = (e, smurf) => {
     axios.post('http://localhost:3333/smurfs', smurf)
+      .then(res => {
+        console.log(res);
+        this.setState({ smurfs: res.data });
+        // this.props.history.push('/');
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  }
+
+  handleEditSmurf = () => {
+
+  }
+
+  handleDeleteSmurf = (e, id) => {
+    axios.delete(`http://localhost:3333/smurfs/${id}`)
       .then(res => {
         console.log(res);
         this.setState({ smurfs: res.data });
@@ -56,6 +73,8 @@ class App extends Component {
           <Smurfs 
             {...props}
             smurfs={this.state.smurfs} 
+            edit={this.handleEditSmurf}
+            delete={this.handleDeleteSmurf}
           />
         }/>
       </div>
