@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+// import axios from 'axios';
 
 class SmurfForm extends Component {
   constructor(props) {
@@ -10,9 +11,33 @@ class SmurfForm extends Component {
     };
   }
 
+  componentDidMount = () => {
+    this.props.isEditing 
+      ? this.setState({
+          name: this.props.editSmurf.name,
+          age: this.props.editSmurf.age,
+          height: this.props.editSmurf.height
+        })
+      : null;
+  }
+
   addSmurf = event => {
     event.preventDefault();
     // add code to create the smurf using the api
+    const smurf = this.state;
+    smurf.age = parseInt(smurf.age);
+    this.props.addSmurf(event, smurf);
+
+    this.setState({
+      name: '',
+      age: '',
+      height: ''
+    });
+  }
+
+  submitEdit = (e) => {
+    e.preventDefault();
+    this.props.submitEdit(e, this.props.editId, this.state);
 
     this.setState({
       name: '',
@@ -28,7 +53,8 @@ class SmurfForm extends Component {
   render() {
     return (
       <div className="SmurfForm">
-        <form onSubmit={this.addSmurf}>
+        <form 
+          onSubmit={(e) => this.props.isEditing ? this.submitEdit(e) : this.addSmurf(e)}>
           <input
             onChange={this.handleInputChange}
             placeholder="name"
@@ -47,7 +73,10 @@ class SmurfForm extends Component {
             value={this.state.height}
             name="height"
           />
-          <button type="submit">Add to the village</button>
+          {this.props.isEditing 
+            ? <button type="submit">Update Smurf</button>
+            : <button type="submit">Add to the village</button>
+          }
         </form>
       </div>
     );
